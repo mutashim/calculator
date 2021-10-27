@@ -1,3 +1,3 @@
 # Financial Calculator
 
-https://mutashim.github.com/calculator/
+https://mutashim.github.io/calculator/
