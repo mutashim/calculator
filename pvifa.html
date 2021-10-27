@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVIFA Calculator</title>
+</head>
+
+<body>
+    <h1>PVIFA Calculator</h1>
+    <hr>
+    <form>
+        <fieldset>
+            <legend>Inputs</legend>
+            <label for="interest">Interest</label>
+            <input type="text" id="interest">
+            <br>
+            <label for="periods">Periods</label>
+            <input type="text" id="periods">
+            <br>
+            <button type="button" onclick="calculate()">Calculate</button>
+        </fieldset>
+    </form>
+    <form>
+        <fieldset>
+            <legend>Ouputs</legend>
+            <div id="result"></div>
+        </fieldset>
+    </form>
+
+    <script>
+        function calculate() {
+            const r = parseFloat(document.getElementById('interest').value);
+            const n = parseFloat(document.getElementById('periods').value);
+            const result = document.getElementById('result');
+
+            var pvifa = (1 - Math.pow(1 + r, -n)) / r;
+            result.innerHTML = "<p>PVIFA: " + pvifa + "</p>";
+        }
+    </script>
+</body>
+
+</html>

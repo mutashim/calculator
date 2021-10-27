@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Amortization Table</title>
+</head>
+
+<body>
+    <h1>Loan Amortization Table</h1>
+    <hr>
+    <form>
+        <fieldset>
+            <legend>Inputs</legend>
+            <label for="facevalue">Face value</label>
+            <input type="text" id="facevalue">
+            <!-- <br>
+            <label for="carryingvalue">Carrying value</label>
+            <input type="text" id="carryingvalue"> -->
+            <br>
+            <label for="coupon">Coupon rate</label>
+            <input type="text" id="coupon">
+            <br>
+            <label for="interest">Interest</label>
+            <input type="text" id="interest">
+            <br>
+            <label for="ytm">Years to Maturity</label>
+            <input type="text" id="ytm">
+            <br>
+            <label for="payment">Payment</label>
+            <select name="" id="payment">
+                <option value="1">Annually</option>
+                <option value="2">Semiannually</option>
+                <option value="4">Quarterly</option>
+                <option value="12">Monthly</option>
+            </select>
+            <br>
+            <button type="button" onclick="calculate()">Calculate</button>
+        </fieldset>
+    </form>
+    <form>
+        <fieldset>
+            <legend>Outputs</legend>
+            <div id="result"></div>
+        </fieldset>
+    </form>
+
+    <script>
+        function calculate() {
+            const facevalue = parseFloat(document.getElementById('facevalue').value);
+            const coupon = parseFloat(document.getElementById('coupon').value);
+            const interest = parseFloat(document.getElementById('interest').value);
+            const terms = parseInt(document.getElementById('ytm').value);
+            const payment = parseInt(document.getElementById('payment').value);
+
+            var pvprincipal = facevalue / (Math.pow((1 + (interest / payment)), (terms * payment)));
+            console.log(pvprincipal);
+            var pvifa = (1 - Math.pow(1 + (interest / payment), -(terms * payment))) / (interest / payment);
+            var pvinterest = pvifa * (facevalue * coupon / payment)
+            console.log(pvifa);
+            console.log(pvinterest);
+            var carryingvalue = parseFloat((pvprincipal + pvinterest).toFixed(2));
+            const result = document.getElementById('result');
+            var tablestr = "<p>Carrying Value: " + carryingvalue + "</p>";
+            tablestr += "<p>Payment value: " + (facevalue * coupon / payment) + "</p>";
+            tablestr += '<table border="1">';
+            tablestr += "<tr>";
+            tablestr += "<th>Payment</th>";
+            tablestr += "<th>Interest Payment</th>";
+            tablestr += "<th>Interest Expense</th>";
+            tablestr += "<th>Amortization of Discount</th>";
+            tablestr += "<th>Discount</th>";
+            tablestr += "<th>Carrying Value</th>";
+            tablestr += "</tr>";
+            tablestr += "<tbody>";
+            tablestr += "<tr>";
+            tablestr += "<td>0</td>";
+            tablestr += "<td>-</td>";
+            tablestr += "<td>-</td>";
+            tablestr += "<td>-</td>";
+            tablestr += "<td>" + (-(facevalue - carryingvalue)) + "</td>";
+            tablestr += "<td>" + (carryingvalue) + "</td>";
+            tablestr += "</tr>";
+
+            var disc = carryingvalue - facevalue;
+            for (let no = 0; no < (terms * payment); no++) {
+                var interestpayment = (facevalue * coupon * (1 / payment));
+                var interestexpense = (carryingvalue * interest * (1 / payment)).toFixed(2);
+                interestexpense = parseFloat(interestexpense);
+                disc = disc + (interestexpense - interestpayment);
+                carryingvalue = carryingvalue + (interestexpense - interestpayment);
+                tablestr += "<tr>";
+                tablestr += "<td>" + (no + 1) + "</td>";
+                tablestr += "<td>" + interestpayment + "</td>";
+                tablestr += "<td>" + interestexpense + "</td>";
+                tablestr += "<td>" + (interestexpense - interestpayment).toFixed(2) + "</td>";
+                tablestr += "<td>" + (disc).toFixed(2) + "</td>";
+                tablestr += "<td>" + (carryingvalue).toFixed(2) + "</td>";
+                tablestr += "</tr>";
+            }
+
+            tablestr += "</tbody>";
+            tablestr += "</table>";
+
+            result.innerHTML = tablestr;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bond Price Calculator</title>
+</head>
+
+<body>
+    <h1>Bond Price Calculator</h1>
+    <hr>
+    <form action="">
+        <fieldset>
+            <legend>Inputs</legend>
+            <label for="facevalue">Face Value</label>
+            <input type="text" id="facevalue">
+            <br>
+            <label for="coupon">Coupon rate (annual)</label>
+            <input type="text" id="coupon">
+            <br>
+            <label for="interet">Interest rate (annual)</label>
+            <input type="text" id="interest">
+            <br>
+            <label for="ytm">Term</label>
+            <input type="text" id="ytm">
+            <br>
+            <label for="payment">Payment</label>
+            <select name="" id="payment">
+                <option value="1">Annually</option>
+                <option value="2">Semiannually</option>
+                <option value="4">Quarterly</option>
+                <option value="12">Monthly</option>
+            </select>
+            <br>
+            <button type="button" onclick="calculate()">Calculate</button>
+        </fieldset>
+    </form>
+    <fieldset>
+        <legend>Outputs</legend>
+        <div id='result'></div>
+    </fieldset>
+
+    <script>
+        function calculate() {
+            const facevalue = parseFloat(document.getElementById('facevalue').value);
+            const coupon = parseFloat(document.getElementById('coupon').value);
+            const interest = parseFloat(document.getElementById('interest').value);
+            const terms = parseInt(document.getElementById('ytm').value);
+            const payment = parseInt(document.getElementById('payment').value);
+
+            var pvprincipal = facevalue / (Math.pow((1 + (interest / payment)), (terms * payment)));
+            console.log(pvprincipal);
+            var pvifa = (1 - Math.pow(1 + (interest / payment), -(terms * payment))) / (interest / payment);
+            var pvinterest = pvifa * (facevalue * coupon / payment)
+            console.log(pvifa);
+            console.log(pvinterest);
+            var carryingvalue = parseFloat((pvprincipal + pvinterest).toFixed(2));
+
+            const result = document.getElementById('result');
+            var r = "<p>PV of Principle: " + pvprincipal + "</p>";
+            r += "<p>PV of Interest: " + pvinterest + "</p>";
+            r += "<p>PVIFA: " + pvifa + "</p>";
+            r += "<p>Bond Price: " + carryingvalue + "</p>";
+            result.innerHTML = r;
+        }
+    </script>
+</body>
+
+</html>
